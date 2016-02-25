@@ -1,12 +1,10 @@
-export default function urlManager({ level, date, test }) {
+export default function urlManager(test) {
 
 	// construct the api url
 	const baseUrl = test
-		? '//dev.apps.bostonglobe.com/electionapi/elections/'
-		: '//www.bostonglobe.com/electionapi/elections/'
+		? '//dev.apps.bostonglobe.com/'
+		: '//www.bostonglobe.com/'
 
-	const url = `${baseUrl}${date}?&level=${level}&officeID=P`
-
-	return url
+	return `${baseUrl}electionapi/reports?type=delegates`
 
 }
