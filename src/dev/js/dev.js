@@ -2,13 +2,83 @@ import { primaries2016Dates, primaries2016Candidates, standardize, Candidate, Ca
 import getJSON from 'get-json-lite'
 import { parse } from 'query-string'
 import urlManager from './urlManager'
-// import dom from './dom'
+import dom from './dom'
 
 const test = true
+
+function toPercent(x, shorten) {
+
+	const decimalPlaces = shorten ? 0 : 2
+
+	if (x === 1) {
+
+		return '100'
+
+	} else if (x === 0) {
+
+		return '0'
+
+	} else if(isNaN(x)) {
+
+		return '0'
+
+	}
+
+	return (100 * x).toFixed(decimalPlaces).toString()
+
+}
 
 function validateResponse(response) {
 
 	return response && response.reports && response.reports.length
+
+}
+
+function getOptionsFromParams() {
+
+	const parsed = parse(window.location.search)
+	const parties = parsed.options.split(',')
+	return parties.map(party => {
+
+		const split = party.split('-')
+		const partyAbbr = split[0]
+		const max = +split[1]
+
+		return { partyAbbr, max }
+
+	})
+
+}
+
+function getCandidateDelegateCount(candidate, states) {
+
+	const cands = states.find(state => state.sId === 'US').Cand
+
+	const cand = cands.find(c => c.cName.toLowerCase() === candidate.last)
+
+	const { dTot, sdTot } = cand
+
+	const totalCount = +dTot
+	const superCount = +sdTot
+	const pledgedCount = totalCount - superCount
+
+	return { totalCount, superCount, pledgedCount }
+
+	// return states.filter(state => state.sId !== 'US').reduce((delegates, state) => {
+
+	// 	const c = state.Cand.find(cand => cand.cName.toLowerCase() === candidate.last)
+
+	// 	const totalCount = +c.dTot
+	// 	const superCount = +c.sdTot
+	// 	const pledgedCount = totalCount - superCount
+
+	// 	delegates.superCount += superCount
+	// 	delegates.pledgedCount += pledgedCount
+	// 	delegates.totalCount += totalCount
+
+	// 	return delegates
+
+	// }, { superCount: 0, pledgedCount: 0, totalCount: 0})
 
 }
 
@@ -17,27 +87,6 @@ function onDataError(error) {
 	console.error(error)
 
 }
-
-function getCandidateDelegateCount(candidate, states) {
-
-	return states.filter(state => state.sId !== 'US').reduce((delegates, state) => {
-
-		const c = state.Cand.find(cand => cand.cName.toLowerCase() === candidate.last)
-
-		const totalCount = +c.dTot
-		const superCount = +c.sdTot
-		const pledgedCount = totalCount - superCount
-
-		delegates.superCount += superCount
-		delegates.pledgedCount += pledgedCount
-		delegates.totalCount += totalCount
-
-		return delegates
-
-	}, { superCount: 0, pledgedCount: 0, totalCount: 0})
-
-}
-
 
 function onDataResponse(response) {
 
@@ -52,20 +101,18 @@ function onDataResponse(response) {
 			const needed = +p.dNeed
 
 
-			const validCandidate = c => {
-
-				return c.party === party.toLowerCase() && !c.suspendedDate
-
-			}
+			const validCandidate = c => c.party === party.toLowerCase() && !c.suspendedDate
 
 			const candidates = primaries2016Candidates.filter(validCandidate)
 				.map(c => {
 
 					const delegates = getCandidateDelegateCount(c, p.State)
 					const last = c.last
-					const first = c.first 
+					const first = c.first
+					const percentSuper = toPercent(delegates.superCount / total)
+					const percentPledged = toPercent(delegates.pledgedCount / total)
 
-					return { first, last, delegates }
+					return { first, last, delegates, percentSuper, percentPledged }
 
 				})
 				.sort((a, b) => b.delegates.totalCount - a.delegates.totalCount)
@@ -75,7 +122,40 @@ function onDataResponse(response) {
 
 		})
 
-		console.log(parties)
+		const options = getOptionsFromParams()
+
+		// only party if in params
+		const filtered = parties.filter(p => {
+
+			return options.find(option =>  {
+
+				const optionP = option.partyAbbr.toLowerCase()
+				const partyP = standardize.collapseParty(p.party).toLowerCase()
+
+				return optionP === partyP
+
+			})
+
+		})
+
+		// truncate candidates
+		const reduced = filtered.map(f => {
+
+			const partyOption = options.find(option => {
+				const optionP = option.partyAbbr.toLowerCase()
+				const partyP = standardize.collapseParty(f.party).toLowerCase()
+
+				return optionP === partyP
+			}) 
+
+			f.candidates = f.candidates.slice(0, partyOption.max)
+
+			return f
+
+		}) 
+
+		reduced.forEach(s => dom.createChart(s))
+
 
 	} else {
 
@@ -87,8 +167,6 @@ function onDataResponse(response) {
 
 function fetchData() {
 
-	// const response = {"delSum":{"Test":"0","timestamp":"2016-02-24T15:20:37Z","del":[{"pId":"Dem","dNeed":"2383","dVotes":"4765","dChosen":"751","dToBeChosen":"4014","Cand":[{"cId":"1746","cName":"Clinton","dTot":"503","d1":"0","d7":"+23","d30":"+146"},{"cId":"100004","cName":"Uncommitted","dTot":"178","d1":"+1","d7":"-1","d30":"-31"},{"cId":"1445","cName":"Sanders","dTot":"70","d1":"0","d7":"+15","d30":"+62"},{"cId":"22603","cName":"O'Malley","dTot":"0","d1":"0","d7":"0","d30":"-2"}]},{"pId":"GOP","dNeed":"1237","dVotes":"2472","dChosen":"132","dToBeChosen":"2340","Cand":[{"cId":"8639","cName":"Trump","dTot":"81","d1":"+14","d7":"+64","d30":"+81"},{"cId":"61815","cName":"Cruz","dTot":"17","d1":"+6","d7":"+6","d30":"+17"},{"cId":"53044","cName":"Rubio","dTot":"17","d1":"+7","d7":"+7","d30":"+17"},{"cId":"36679","cName":"Kasich","dTot":"6","d1":"+1","d7":"+1","d30":"+6"},{"cId":"1239","cName":"Bush","dTot":"4","d1":"0","d7":"0","d30":"+4"},{"cId":"64509","cName":"Carson","dTot":"4","d1":"+1","d7":"+1","d30":"+4"},{"cId":"60339","cName":"Fiorina","dTot":"1","d1":"0","d7":"0","d30":"+1"},{"cId":"1187","cName":"Huckabee","dTot":"1","d1":"0","d7":"0","d30":"+1"},{"cId":"60208","cName":"Paul","dTot":"1","d1":"0","d7":"0","d30":"+1"},{"cId":"60051","cName":"Christie","dTot":"0","d1":"0","d7":"0","d30":"0"},{"cId":"1752","cName":"Santorum","dTot":"0","d1":"0","d7":"0","d30":"0"}]}]}}
-	// onDataResponse(response)
 	const url = urlManager(test)
 	getJSON(url, onDataResponse, onDataError)
 
