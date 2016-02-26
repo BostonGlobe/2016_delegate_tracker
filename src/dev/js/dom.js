@@ -7,10 +7,10 @@ function createCandidateElement(candidate) {
 	return `
 		<li class='candidate'>
 			<p class='candidate-name'>${candidate.last}</p>
-			<div class='bars'>
+			<div class='candidate-bar-container'>
 				<span class='bar bar-pledged' style='width:${candidate.percentPledged}%;'></span>
 				<span class='bar bar-super' style='width:${candidate.percentSuper}%;'></span>
-				<span class='number'>${candidate.delegates.totalCount}</span>
+				<span class='bar bar-number'>${candidate.delegates.totalCount}</span>
 			</div>
 		</li>
 	`.trim()
@@ -26,6 +26,8 @@ function createChart(party) {
 	`.trim()
 
 	const el = document.createElement('div')
+	el.classList.add('chart')
+	el.classList.add(`${party.party.toLowerCase()}`)
 	el.innerHTML = html
 	container.appendChild(el)
 

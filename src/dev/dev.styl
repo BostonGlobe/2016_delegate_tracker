@@ -32,33 +32,67 @@ font(family = $serif, weight = 400, style = normal)
 	font-family family
 	font-weight weight
 	font-style style
-	
-.bars 
-	height 1.5em
-	position relative
-	background-color #efefef
-	line-height 1.5
 
-.bar
+$dem = rgb(89, 136, 157)
+$gop = rgb(191, 97, 81)
+
+$parties = {
+	democratic: $dem
+	republican: $gop
+}
+
+.candidate 
+	display block
+	height 100%
+	width 100%
+	overflow hidden
+	position relative
+	margin-bottom 0.5em
+	font($benton, $bold)
+	
+	&-name
+		float left 
+		width 5em
+		text-transform capitalize
+		
+	&-bar-container
+		height 1.5em
+		overflow hidden
+		position relative
+		background-color #efefef
+
+.bar 
 	height 100%
 	float left 
-	
-	&-pledged 
-		background-color pink
-	
-	&-super
-		background-color aqua
 
-.number 
-	font-size 0.9em
-	margin-left 0.5em	
+	&-number 
+		margin-left 0.5em
+		font-size 0.75em
+		line-height 2
+		
+
+.democratic .bar-pledged 
+	background-color $dem
+
+.democratic .bar-super 
+	background-color tint($dem,20)
+	// background-image repeating-linear-gradient(
+	// 	45deg,
+	// 	tint($dem,20),
+	// 	tint($dem,20) .4em,
+	// 	tint($dem,10) .4em,
+	// 	tint($dem,10) .8em
+	// )
+			
+	
+.republican .bar-pledged 
+	background-color $gop
+	
+
 
 // .needed-marker
 // 	position absolute
-// 	height 120%
-// 	left 50%
+// 	height 100%
+// 	left 5%
 // 	width 1px
-// 	background-color purple
-// 	transform translateY(-10%)
-	
-	
+// 	border-left 1px dashed #ccc
