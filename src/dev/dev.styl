@@ -19,10 +19,25 @@
 /* Graphic styles
 /* =========================== */
 
+$sans = Helvetica, Arial, sans-serif
+$serif = Georgia, Times, serif
+$benton = Benton, Helvetica, Arial, sans-serif
+$miller = Miller, Georgia, Times, serif
+$miller-banner = Miller-Banner, Georgia, Times, serif
+
+$regular = 400
+$bold = 700
+
+font(family = $serif, weight = 400, style = normal)
+	font-family family
+	font-weight weight
+	font-style style
+	
 .bars 
-	height 2em
+	height 1.5em
 	position relative
 	background-color #efefef
+	line-height 1.5
 
 .bar
 	height 100%
@@ -33,14 +48,17 @@
 	
 	&-super
 		background-color aqua
-		
 
-.needed-marker
-	position absolute
-	height 120%
-	left 50%
-	width 1px
-	background-color purple
-	transform translateY(-10%)
+.number 
+	font-size 0.9em
+	margin-left 0.5em	
+
+// .needed-marker
+// 	position absolute
+// 	height 120%
+// 	left 50%
+// 	width 1px
+// 	background-color purple
+// 	transform translateY(-10%)
 	
 	

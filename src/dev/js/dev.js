@@ -109,8 +109,8 @@ function onDataResponse(response) {
 					const delegates = getCandidateDelegateCount(c, p.State)
 					const last = c.last
 					const first = c.first
-					const percentSuper = toPercent(delegates.superCount / total)
-					const percentPledged = toPercent(delegates.pledgedCount / total)
+					const percentSuper = toPercent(delegates.superCount / needed)
+					const percentPledged = toPercent(delegates.pledgedCount / needed)
 
 					return { first, last, delegates, percentSuper, percentPledged }
 

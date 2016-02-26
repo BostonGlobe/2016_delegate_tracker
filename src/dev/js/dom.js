@@ -8,9 +8,9 @@ function createCandidateElement(candidate) {
 		<li class='candidate'>
 			<p class='candidate-name'>${candidate.last}</p>
 			<div class='bars'>
-				<div class='bar bar-pledged' style='width:${candidate.percentPledged}%;'></div>
-				<div class='bar bar-super' style='width:${candidate.percentSuper}%;'></div>
-				<div class='needed-marker'></div>
+				<span class='bar bar-pledged' style='width:${candidate.percentPledged}%;'></span>
+				<span class='bar bar-super' style='width:${candidate.percentSuper}%;'></span>
+				<span class='number'>${candidate.delegates.totalCount}</span>
 			</div>
 		</li>
 	`.trim()
@@ -22,6 +22,7 @@ function createChart(party) {
 	const html = `
 		<h3 class='party-name'>${party.party}</h3>
 		<ul class='candidates'>${party.candidates.map(createCandidateElement).join('')}</ul>
+		<p class='needed'>${party.needed} needed to win</p>
 	`.trim()
 
 	const el = document.createElement('div')
