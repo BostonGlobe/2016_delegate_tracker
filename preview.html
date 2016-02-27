@@ -36,13 +36,23 @@
 			<script src='https://apps.bostonglobe.com/common/js/pym/pym-0.4.5.min.js' type='text/javascript'></script>
 			<script>
 			    
-			    // choose the party and the max candidates # to show
-			    // 'party-number'
-			    // ex 'dem-2'
+			    //===================================================
+				// Choose the party and number of candidates to show
+				//===================================================
+			    
+			    /*	Usage: party-number,
+
+			    	ex. just 2 democrats:
+			    		'dem-2',
+					
+					ex. both parties, 2 dems 3 gop:
+						'dem-2',
+						'gop-3',
+		    	*/
 
 			    var options = [
 			    	'dem-2',
-			    	'gop-3'
+			    	'gop-3',
 			    ];
 
 			    var customParams = '&options=' + encodeURIComponent(options.join(','));

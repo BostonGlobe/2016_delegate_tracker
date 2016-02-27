@@ -41,6 +41,30 @@ $parties = {
 	republican: $gop
 }
 
+.transparent 
+	opacity 0
+
+.intro
+	text-align center
+
+	&-hed 
+		font-size 1.4em 
+		font($benton, bold)
+		
+	&-updated 
+		transition opacity 1s
+		font-size 0.8em
+		color #bcbcbc
+		font($benton) 
+
+for party, color in $parties
+
+	.{party} .party-name 
+		font($benton, $bold)
+		font-size 1.2em
+		margin-bottom 0.2em
+		color color
+
 .candidate 
 	display block
 	height 100%
@@ -60,15 +84,27 @@ $parties = {
 		overflow hidden
 		position relative
 		background-color #efefef
+		border-radius 3px
 
 .bar 
 	height 100%
 	float left 
+	display inline-block
 
 	&-number 
-		margin-left 0.5em
+		position absolute
+		top 0
 		font-size 0.75em
 		line-height 2
+		color #333
+		
+		&.before-half 
+			margin-left 0.75em
+		
+		&.after-half
+			margin-right 0.75em
+			color #efefef
+			
 		
 
 .democratic .bar-pledged 
@@ -76,20 +112,26 @@ $parties = {
 
 .democratic .bar-super 
 	background-color tint($dem,20)
-	// background-image repeating-linear-gradient(
-	// 	45deg,
-	// 	tint($dem,20),
-	// 	tint($dem,20) .4em,
-	// 	tint($dem,10) .4em,
-	// 	tint($dem,10) .8em
-	// )
+	background-image repeating-linear-gradient(
+		45deg,
+		tint($dem,20),
+		tint($dem,20) .2em,
+		tint($dem,10) .2em,
+		tint($dem,10) .4em
+	)
 			
-	
 .republican .bar-pledged 
 	background-color $gop
-	
 
+.needed 
+	font($benton)
+	font-size 0.8em
+	color #888
+	text-align right	
 
+.attribution 
+	font($benton, $bold)
+	font-size 0.75em 
 // .needed-marker
 // 	position absolute
 // 	height 100%

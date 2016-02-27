@@ -1,4 +1,4 @@
-import { primaries2016Dates, primaries2016Candidates, standardize, Candidate, Candidates } from 'election-utils'
+import { primaries2016Candidates, standardize } from 'election-utils'
 import getJSON from 'get-json-lite'
 import { parse } from 'query-string'
 import urlManager from './urlManager'
@@ -18,7 +18,7 @@ function toPercent(x, shorten) {
 
 		return '0'
 
-	} else if(isNaN(x)) {
+	} else if (isNaN(x)) {
 
 		return '0'
 
@@ -58,27 +58,11 @@ function getCandidateDelegateCount(candidate, states) {
 
 	const { dTot, sdTot } = cand
 
-	const totalCount = +dTot
-	const superCount = +sdTot
-	const pledgedCount = totalCount - superCount
+	const total = +dTot
+	const supers = +sdTot
+	const pledged = total - supers
 
-	return { totalCount, superCount, pledgedCount }
-
-	// return states.filter(state => state.sId !== 'US').reduce((delegates, state) => {
-
-	// 	const c = state.Cand.find(cand => cand.cName.toLowerCase() === candidate.last)
-
-	// 	const totalCount = +c.dTot
-	// 	const superCount = +c.sdTot
-	// 	const pledgedCount = totalCount - superCount
-
-	// 	delegates.superCount += superCount
-	// 	delegates.pledgedCount += pledgedCount
-	// 	delegates.totalCount += totalCount
-
-	// 	return delegates
-
-	// }, { superCount: 0, pledgedCount: 0, totalCount: 0})
+	return { total, supers, pledged }
 
 }
 
@@ -88,73 +72,96 @@ function onDataError(error) {
 
 }
 
+
+function createPartyCandidates(p) {
+
+	const party = standardize.expandParty(p.pId)
+	const total = +p.dVotes
+	const needed = +p.dNeed
+
+	const validCandidate = c => c.party === party.toLowerCase() && !c.suspendedDate
+
+	const candidatesWithCounts = primaries2016Candidates.filter(validCandidate)
+		.map(c => {
+
+			const delegates = getCandidateDelegateCount(c, p.State)
+			const last = c.last
+			const first = c.first
+
+			return { first, last, delegates }
+
+		})
+		.sort((a, b) => b.delegates.total - a.delegates.total)
+
+	const max = Math.max(candidatesWithCounts[0].delegates.total, needed)
+
+	const candidates = candidatesWithCounts.map(c => {
+
+		const percent = {
+			supers: toPercent(c.delegates.supers / max),
+			pledged: toPercent(c.delegates.pledged / max),
+			total: toPercent(c.delegates.total / max),
+		}
+
+		c.percent = percent
+
+		return c
+
+	})
+
+	return { party, total, needed, candidates }
+
+}
+
+function filterByParams(p, options) {
+
+	return options.find(option => {
+
+		const optionP = option.partyAbbr.toLowerCase()
+		const partyP = standardize.collapseParty(p.party).toLowerCase()
+
+		return optionP === partyP
+
+	})
+
+}
+
+function reduceByParams(f, options) {
+
+	const partyOption = options.find(option => {
+
+		const optionP = option.partyAbbr.toLowerCase()
+		const partyP = standardize.collapseParty(f.party).toLowerCase()
+
+		return optionP === partyP
+
+	})
+
+	f.candidates = f.candidates.slice(0, partyOption.max)
+
+	return f
+
+}
+
 function onDataResponse(response) {
 
 	if (validateResponse(response)) {
 
 		const delsuper = response.reports.find(report => report.title.includes('delsuper'))
 
-		const parties = delsuper.report.delSuper.del.map(p => {
-
-			const party = standardize.expandParty(p.pId)
-			const total = +p.dVotes
-			const needed = +p.dNeed
-
-
-			const validCandidate = c => c.party === party.toLowerCase() && !c.suspendedDate
-
-			const candidates = primaries2016Candidates.filter(validCandidate)
-				.map(c => {
-
-					const delegates = getCandidateDelegateCount(c, p.State)
-					const last = c.last
-					const first = c.first
-					const percentSuper = toPercent(delegates.superCount / needed)
-					const percentPledged = toPercent(delegates.pledgedCount / needed)
-
-					return { first, last, delegates, percentSuper, percentPledged }
-
-				})
-				.sort((a, b) => b.delegates.totalCount - a.delegates.totalCount)
-
-
-			return { party, total, needed, candidates }
-
-		})
+		const parties = delsuper.report.delSuper.del.map(createPartyCandidates)
 
 		const options = getOptionsFromParams()
 
-		// only party if in params
-		const filtered = parties.filter(p => {
+		// filter to parties from parameters
+		const filtered = parties.filter(p => filterByParams(p, options))
 
-			return options.find(option =>  {
-
-				const optionP = option.partyAbbr.toLowerCase()
-				const partyP = standardize.collapseParty(p.party).toLowerCase()
-
-				return optionP === partyP
-
-			})
-
-		})
-
-		// truncate candidates
-		const reduced = filtered.map(f => {
-
-			const partyOption = options.find(option => {
-				const optionP = option.partyAbbr.toLowerCase()
-				const partyP = standardize.collapseParty(f.party).toLowerCase()
-
-				return optionP === partyP
-			}) 
-
-			f.candidates = f.candidates.slice(0, partyOption.max)
-
-			return f
-
-		}) 
+		// truncate candidate list from parameters
+		const reduced = filtered.map(f => reduceByParams(f, options))
 
 		reduced.forEach(s => dom.createChart(s))
+
+		dom.updatedTime(response.updated)
 
 
 	} else {
