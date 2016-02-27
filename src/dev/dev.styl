@@ -57,12 +57,14 @@ $parties = {
 		color #bcbcbc
 		font($benton) 
 
+.chart 
+	margin-bottom 1em 
+
 for party, color in $parties
 
 	.{party} .party-name 
 		font($benton, $bold)
 		font-size 1.2em
-		margin-bottom 0.2em
 		color color
 
 .candidate 
@@ -85,6 +87,7 @@ for party, color in $parties
 		position relative
 		background-color #efefef
 		border-radius 3px
+		margin-bottom 0.5em
 
 .bar 
 	height 100%
@@ -114,10 +117,10 @@ for party, color in $parties
 	background-color tint($dem,20)
 	background-image repeating-linear-gradient(
 		45deg,
-		tint($dem,20),
+		tint($dem,40),
+		tint($dem,40) .2em,
 		tint($dem,20) .2em,
-		tint($dem,10) .2em,
-		tint($dem,10) .4em
+		tint($dem,20) .4em
 	)
 			
 .republican .bar-pledged 
@@ -127,14 +130,65 @@ for party, color in $parties
 	font($benton)
 	font-size 0.8em
 	color #888
-	text-align right	
+	text-align right
+	position relative
+
+	&:after 
+		display inline-block
+		
+		transform translateY(0.5em)
+		content '\02935'		
+		
+		// position absolute
+		// bottom -0.75em
+		// right 0
+		// content '\025BE'
+		
 
 .attribution 
 	font($benton, $bold)
 	font-size 0.75em 
-// .needed-marker
-// 	position absolute
-// 	height 100%
-// 	left 5%
-// 	width 1px
-// 	border-left 1px dashed #ccc
+
+.dem-key 
+	font($benton)
+	font-size 0.75em
+	color #888
+	height 100%
+	overflow hidden
+	line-height 1.5
+	
+	li 
+		float left
+		margin-right 1em
+		list-style-type none
+		vertical-align middle
+		
+		&:before
+			content ''
+			display inline-block
+			width 1.4em 
+			height 1.4em
+			margin-right 0.5em
+			border-radius 3px
+			vertical-align bottom
+			
+		&.key-pledged:before
+			background-color $dem
+
+		&.key-super:before
+			background-color tint($dem,20)
+			background-image repeating-linear-gradient(
+				45deg,
+				tint($dem,40),
+				tint($dem,40) .2em,
+				tint($dem,20) .2em,
+				tint($dem,20) .4em
+			)
+	
+.gop-note 
+	font($benton)
+	font-size 0.75em
+	color #888
+	line-height 1.4	
+	.name 
+		text-transform capitalize

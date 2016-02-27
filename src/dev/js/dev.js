@@ -58,6 +58,9 @@ function getCandidateDelegateCount(candidate, states) {
 
 	const { dTot, sdTot } = cand
 
+	// test
+	// const total = candidate.last === 'sanders' ? 3200 : +dTot
+
 	const total = +dTot
 	const supers = +sdTot
 	const pledged = total - supers
@@ -80,6 +83,7 @@ function createPartyCandidates(p) {
 	const needed = +p.dNeed
 
 	const validCandidate = c => c.party === party.toLowerCase() && !c.suspendedDate
+	// const validCandidate = c => c.party === party.toLowerCase()
 
 	const candidatesWithCounts = primaries2016Candidates.filter(validCandidate)
 		.map(c => {
@@ -109,7 +113,7 @@ function createPartyCandidates(p) {
 
 	})
 
-	return { party, total, needed, candidates }
+	return { party, total, needed, max, candidates }
 
 }
 
@@ -137,6 +141,7 @@ function reduceByParams(f, options) {
 
 	})
 
+	f.others = f.candidates.slice(partyOption.max, f.candidates.length)
 	f.candidates = f.candidates.slice(0, partyOption.max)
 
 	return f

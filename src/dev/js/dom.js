@@ -10,7 +10,7 @@ function createCandidateElement(candidate) {
 
 	const overHalf = candidate.percent.total > 50
 	const halfClass = overHalf ? 'after-half' : 'before-half'
-	const rightPos = overHalf ? (100 - candidate.percent.total).toFixed(2) : 'auto'
+	const rightPos = overHalf ? `${(100 - candidate.percent.total).toFixed(2)}%` : 'auto'
 
 	return `
 		<li class='candidate'>
@@ -18,7 +18,7 @@ function createCandidateElement(candidate) {
 			<div class='candidate-bar-container'>
 				<span class='bar bar-pledged' style='width:${candidate.percent.pledged}%;'></span>
 				<span class='bar bar-super' style='width:${candidate.percent.supers}%;'></span>
-				<span class='bar bar-number ${halfClass}' style='right: ${rightPos}%;'>
+				<span class='bar bar-number ${halfClass}' style='right: ${rightPos};'>
 					${numberWithCommas(candidate.delegates.total)}
 				</span>
 			</div>
@@ -27,12 +27,44 @@ function createCandidateElement(candidate) {
 
 }
 
+function getPartyNote(p) {
+
+	return p.party === 'Democratic'
+	? `
+		<ul class='dem-key'>
+			<li class='key-pledged'>Pledged delegates</li>
+			<li class='key-super'>Super delegates</li>
+		</ul>
+	`.trim()
+	: p.others.length
+		? `
+			<p class='gop-note'>Other active candidates:
+				${
+					p.others
+					.map(o => `<span class='name'>${o.last}</span> (${o.delegates.total})`)
+					.join(', ')
+				}
+			</p>
+		`.trim()
+		: ''
+
+}
+
 function createChart(party) {
+
+	const overNeeded = party.candidates[0].delegates.total > party.needed
+	const neededClass = overNeeded ? 'over-needed' : 'under-needed'
+	const rightPos = overNeeded ? `${(100 - (party.needed / party.max * 100)).toFixed(2)}%` : 'auto'
+
+	const note = getPartyNote(party)
 
 	const html = `
 		<h3 class='party-name'>${party.party}</h3>
+		<p class='needed ${neededClass}' style='margin-right: ${rightPos};'>
+			${numberWithCommas(party.needed)} needed to win
+		</p>
 		<ul class='candidates'>${party.candidates.map(createCandidateElement).join('')}</ul>
-		<p class='needed'>${numberWithCommas(party.needed)} needed to win</p>
+		<div class='note'>${note}</div>
 	`.trim()
 
 	const el = document.createElement('div')
