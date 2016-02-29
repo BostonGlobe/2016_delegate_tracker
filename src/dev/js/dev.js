@@ -61,7 +61,7 @@ function getCandidateDelegateCount(candidate, states) {
 	// test
 	// const total = candidate.last === 'sanders' ? 3200 : +dTot
 
-	const total = 1400
+	const total = +dTot
 	const supers = +sdTot
 	const pledged = total - supers
 
