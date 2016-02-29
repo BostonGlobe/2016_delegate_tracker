@@ -1,7 +1,7 @@
-export default function urlManager(test) {
+export default function urlManager() {
 
 	// construct the api url
-	const baseUrl = test
+	const baseUrl = process.env.test
 		? '//dev.apps.bostonglobe.com/'
 		: '//www.bostonglobe.com/'
 
