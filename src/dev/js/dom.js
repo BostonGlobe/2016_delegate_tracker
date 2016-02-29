@@ -82,16 +82,6 @@ function updatedTime(str) {
 	const d = new Date(str)
 
 	const dateString = dateFormat(d, 'mmm d h:MM TT Z');
-	// const dateFull = d.toDateString()
-	// const dateSplit = dateFull.split(' ')
-	// const dateStr = dateSplit.slice(1, dateSplit.length - 1).join(' ')
-
-	// const timeFull = d.toLocaleTimeString()
-	// const timeSplit = timeFull.split(' ')
-	// const timeSplitColon = timeSplit[0].split(':')
-	// const timeStr = `${timeSplitColon.slice(0, 2).join(':')} ${timeSplit[1]}`
-
-	// const output = `${dateStr} ${timeStr}`
 
 	document.querySelector('.intro-updated').classList.remove('transparent')
 	document.querySelector('.updated-time').textContent = dateString
