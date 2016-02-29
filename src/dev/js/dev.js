@@ -86,32 +86,27 @@ function createPartyCandidates(p) {
 	// const validCandidate = c => c.party === party.toLowerCase()
 
 	const candidatesWithCounts = primaries2016Candidates.filter(validCandidate)
-		.map(c => {
+		.map(c => ({
 
-			const delegates = getCandidateDelegateCount(c, p.State)
-			const last = c.last
-			const first = c.first
+			delegates: getCandidateDelegateCount(c, p.State),
+			last: c.last,
+			first: c.first,
 
-			return { first, last, delegates }
-
-		})
+		}))
 		.sort((a, b) => b.delegates.total - a.delegates.total)
 
 	const max = Math.max(candidatesWithCounts[0].delegates.total, needed)
 
-	const candidates = candidatesWithCounts.map(c => {
+	const candidates = candidatesWithCounts.map(c => ({
 
-		const percent = {
+		...c,
+		percent: {
 			supers: toPercent(c.delegates.supers / max),
 			pledged: toPercent(c.delegates.pledged / max),
 			total: toPercent(c.delegates.total / max),
-		}
+		},
 
-		c.percent = percent
-
-		return c
-
-	})
+	}))
 
 	return { party, total, needed, max, candidates }
 
