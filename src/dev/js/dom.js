@@ -61,7 +61,7 @@ function createChart(party) {
 	const note = getPartyNote(party)
 
 	const html = `
-		<h3 class='party-name'>${party.party}</h3>
+		<h3 class='party-name'>${party.party} delegates</h3>
 		<p class='needed ${neededClass}' style='margin-right: ${rightPos};'>
 			${numberWithCommas(party.needed)} needed to win
 		</p>

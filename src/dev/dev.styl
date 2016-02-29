@@ -53,12 +53,16 @@ $parties = {
 		
 	&-updated 
 		transition opacity 1s
-		font-size 0.8em
+		font-size 0.75em
 		color #bcbcbc
 		font($benton) 
+		text-align right
 
 .chart 
-	margin 1em 0
+	margin-bottom 2.5em
+	&:last-child
+		margin-bottom 0.5em
+	
 
 for party, color in $parties
 
