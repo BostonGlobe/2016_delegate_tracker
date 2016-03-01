@@ -161,7 +161,7 @@ function onDataResponse(response) {
 
 		reduced.forEach(s => dom.createChart(s))
 
-		dom.updatedTime(response.updated)
+		dom.updatedTime(delsuper.updated)
 
 
 	} else {
