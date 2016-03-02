@@ -1,4 +1,7 @@
 {
+	"scripts": {
+		"prod": "gulp prod && cat dist/index.html | pbcopy"
+	},
   "version": "1.3.0",
   "dependencies": {
     "babel-cli": "^6.4.0",
