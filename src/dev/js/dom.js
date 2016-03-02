@@ -35,7 +35,7 @@ function getPartyNote(p) {
 	? `
 		<ul class='dem-key'>
 			<li class='key-pledged'>Pledged delegates</li>
-			<li class='key-super'>Super delegates</li>
+			<li class='key-super'>Superdelegates</li>
 		</ul>
 	`.trim()
 	: p.others.length
