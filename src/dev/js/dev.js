@@ -4,7 +4,43 @@ import { parse } from 'query-string'
 import urlManager from './urlManager'
 import dom from './dom'
 
-const test = true
+if (!String.prototype.includes) {
+  String.prototype.includes = function(search, start) {
+    'use strict';
+    if (typeof start !== 'number') {
+      start = 0;
+    }
+    
+    if (start + search.length > this.length) {
+      return false;
+    } else {
+      return this.indexOf(search, start) !== -1;
+    }
+  };
+}
+
+if (!Array.prototype.find) {
+  Array.prototype.find = function(predicate) {
+    if (this === null) {
+      throw new TypeError('Array.prototype.find called on null or undefined');
+    }
+    if (typeof predicate !== 'function') {
+      throw new TypeError('predicate must be a function');
+    }
+    var list = Object(this);
+    var length = list.length >>> 0;
+    var thisArg = arguments[1];
+    var value;
+
+    for (var i = 0; i < length; i++) {
+      value = list[i];
+      if (predicate.call(thisArg, value, i, list)) {
+        return value;
+      }
+    }
+    return undefined;
+  };
+}
 
 function toPercent(x, shorten) {
 
@@ -174,7 +210,7 @@ function onDataResponse(response) {
 
 function fetchData() {
 
-	const url = urlManager(test)
+	const url = urlManager()
 	getJSON(url, onDataResponse, onDataError)
 
 }
