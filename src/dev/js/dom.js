@@ -1,4 +1,4 @@
-import dateFormat from 'dateformat'
+import { formatTimestamp } from 'election-utils'
 
 const container = document.querySelector('.chart-container')
 
@@ -79,16 +79,8 @@ function createChart(party) {
 
 function updatedTime(str) {
 
-	const d = new Date(str)
-
-	const dateString = dateFormat(d, 'h:MM TT Z')
-
-	const month = dateFormat(d, 'mmm. d')
-
-	const output = `${month}&nbsp;&nbsp;${dateString}`
-
 	document.querySelector('.intro-updated').classList.remove('transparent')
-	document.querySelector('.updated-time').innerHTML = output
+	document.querySelector('.updated-time').innerHTML = formatTimestamp({ timestamp: str })
 
 }
 
