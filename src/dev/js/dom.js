@@ -78,13 +78,17 @@ function createChart(party) {
 }
 
 function updatedTime(str) {
-	
+
 	const d = new Date(str)
 
-	const dateString = dateFormat(d, 'mmm d h:MM TT Z');
+	const dateString = dateFormat(d, 'h:MM TT Z')
+
+	const month = dateFormat(d, 'mmm. d')
+
+	const output = `${month}&nbsp;&nbsp;${dateString}`
 
 	document.querySelector('.intro-updated').classList.remove('transparent')
-	document.querySelector('.updated-time').textContent = dateString
+	document.querySelector('.updated-time').innerHTML = output
 
 }
 
