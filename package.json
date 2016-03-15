@@ -13,7 +13,7 @@
     "babel-preset-stage-1": "^6.5.0",
     "browser-sync": "^2.11.1",
     "dateformat": "^1.0.12",
-    "election-utils": "^3.5.1",
+    "election-utils": "^3.5.5",
     "eslint": "^2.2.0",
     "eslint-config-airbnb": "^6.0.2",
     "eslint-plugin-react": "^4.0.0",
