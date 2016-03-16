@@ -28,6 +28,10 @@ $miller-banner = Miller-Banner, Georgia, Times, serif
 $regular = 400
 $bold = 700
 
+$mq-big = 53em
+$mq-med = 40em
+$mq-sm = 35em
+
 font(family = $serif, weight = 400, style = normal)
 	font-family family
 	font-weight weight
@@ -219,3 +223,23 @@ for party, color in $parties
 	line-height 1.4	
 	.name 
 		text-transform capitalize
+
+.more-info
+	overflow auto
+	zoom 1
+	p 
+		float left 
+		width 50%
+		
+		&.races-container
+			font($benton)
+			font-size 0.75em 
+			text-align right
+			a 
+				text-decoration underline
+				color #222
+					
+				&:hover 
+					color #888
+					text-decoration underline
+					transition color 0.2s ease-in-out
