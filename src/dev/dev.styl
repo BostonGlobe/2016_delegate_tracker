@@ -151,7 +151,20 @@ for party, color in $parties
 		tint($dem,20) .4em
 	)
 			
-.republican .bar-pledged 
+.republican .bar-pledged
+	 background-color $gop
+
+.republican .bar-super	 
+	background-color tint($gop,20)
+	background-image repeating-linear-gradient(
+		45deg,
+		tint($gop,40),
+		tint($gop,40) .2em,
+		tint($gop,20) .2em,
+		tint($gop,20) .4em
+	)
+
+.republican .bar-super 
 	background-color $gop
 
 .needed 
@@ -214,6 +227,42 @@ for party, color in $parties
 				tint($dem,40) .2em,
 				tint($dem,20) .2em,
 				tint($dem,20) .4em
+			)
+
+.gop-key 
+	font($benton)
+	font-size 0.75em
+	color #888
+	height 100%
+	overflow hidden
+	line-height 1.5
+	
+	li 
+		float left
+		margin-right 1em
+		list-style-type none
+		vertical-align middle
+		
+		&:before
+			content ''
+			display inline-block
+			width 1.4em 
+			height 1.4em
+			margin-right 0.5em
+			border-radius 3px
+			vertical-align bottom
+			
+		&.key-pledged:before
+			background-color $gop
+
+		&.key-super:before
+			background-color tint($gop,20)
+			background-image repeating-linear-gradient(
+				45deg,
+				tint($gop,40),
+				tint($gop,40) .2em,
+				tint($gop,20) .2em,
+				tint($gop,20) .4em
 			)
 	
 .gop-note 

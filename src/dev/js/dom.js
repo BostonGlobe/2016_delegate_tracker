@@ -30,25 +30,29 @@ function createCandidateElement(candidate) {
 }
 
 function getPartyNote(p) {
-
+	// <li class='key-pledged'>Pledged delegates</li>
 	return p.party === 'Democratic'
 	? `
 		<ul class='dem-key'>
-			<li class='key-pledged'>Pledged delegates</li>
 			<li class='key-super'>Superdelegates</li>
 		</ul>
 	`.trim()
-	: p.others.length
-		? `
-			<p class='gop-note'>Other active candidates:
-				${
-					p.others
-					.map(o => `<span class='name'>${o.last}</span> (${o.delegates.total})`)
-					.join(', ')
-				}
-			</p>
-		`.trim()
-		: ''
+	// : p.others.length
+	// 	? `
+	// 		<p class='gop-note'>Other active candidates:
+	// 			${
+	// 				p.others
+	// 				.map(o => `<span class='name'>${o.last}</span> (${o.delegates.total})`)
+	// 				.join(', ')
+	// 			}
+	// 		</p>
+	// 	`.trim()
+	// 	: ''
+	: `
+		<ul class='gop-key'>
+			<li class='key-super'>Unbound delegates</li>
+		</ul>
+	`.trim()
 
 }
 
